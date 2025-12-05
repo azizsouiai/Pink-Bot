@@ -130,20 +130,44 @@ The React widget allows you to embed the chatbot into any website.
 
 ### Quick Start (Both Services)
 
+**Option 1: Automated Script (Recommended)**
+
+**On macOS/Linux:**
+```bash
+cd Chatbruti
+./start_integrated.sh
+```
+
+**On Windows:**
+```bash
+cd Chatbruti
+start_integrated.bat
+```
+
+**Option 2: Manual (Two Terminals)**
+
 **Terminal 1 - Start Python API:**
 ```bash
-cd Pink-Bot
-source venv/bin/activate  # If not already activated
+cd Chatbruti
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 python -m chatbruti.api_server
 ```
 
 **Terminal 2 - Start React Widget:**
 ```bash
-cd widget-UI
+cd Chatbruti/widget-UI
+npm install  # First time only
 npm run dev
 ```
 
 Then open your browser to see the widget in action!
+
+**Note:** Make sure to create a `.env` file in `widget-UI/` with:
+```env
+VITE_API_URL=http://localhost:8000/chat
+```
+
+For detailed integration information, see [INTEGRATION.md](INTEGRATION.md).
 
 ## Configuration
 
