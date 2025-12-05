@@ -1,9 +1,9 @@
 #!/bin/bash
-# Quick setup script for Chatbruti
+# Quick setup script for Pink-Bot
 
 set -e
 
-echo "🚀 Setting up Chatbruti..."
+echo "🚀 Setting up Pink-Bot..."
 
 # Create virtual environment if it doesn't exist
 if [ ! -d "venv" ]; then
@@ -23,6 +23,10 @@ pip install --upgrade pip
 echo "📥 Installing dependencies..."
 pip install -r requirements.txt
 
+# Install package in editable mode
+echo "📦 Installing package in editable mode..."
+pip install -e .
+
 # Create .env file if it doesn't exist
 if [ ! -f ".env" ]; then
     echo "📝 Creating .env file from .env.example..."
@@ -37,7 +41,8 @@ echo "✅ Setup complete!"
 echo ""
 echo "Next steps:"
 echo "1. Edit .env file with your configuration"
-echo "2. If using Mistral API, add your MISTRAL_API_KEY"
+echo "2. Add your GROQ_API_KEY to .env"
 echo "3. Run: python -m chatbruti.main --interactive"
 echo "   or: python example.py"
+echo "   or: python -m chatbruti.api_server (for API)"
 

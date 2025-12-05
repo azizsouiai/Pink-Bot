@@ -2,26 +2,44 @@
 
 ## Setup
 
-1. **Install dependencies:**
+1. **Clone the repository (if you haven't already):**
+   ```bash
+   git clone https://github.com/azizsouiai/Pink-Bot.git
+   cd Pink-Bot  # Navigate to the cloned folder
+   ```
+
+2. **Create a virtual environment (recommended):**
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+
+3. **Install dependencies:**
    ```bash
    pip install -r requirements.txt
    ```
 
-2. **Create `.env` file:**
+4. **Install the package in editable mode:**
+   ```bash
+   pip install -e .
+   ```
+   ⚠️ **Important:** This step is required so Python can find the `chatbruti` module.
+
+5. **Create `.env` file:**
    ```bash
    cp .env.example .env
    ```
 
-3. **Edit `.env` file and add your Groq API key:**
+6. **Edit `.env` file and add your Groq API key:**
    ```
-   GROQ_API_KEY= your key
+   GROQ_API_KEY=your_groq_api_key_here
    ```
 
    The `.env` file should look like:
    ```
    MODEL_NAME=openai/gpt-oss-120b
    BACKEND=groq
-   GROQ_API_KEY= you key
+   GROQ_API_KEY=your_groq_api_key_here
    REASONING_EFFORT=medium
    MAX_NEW_TOKENS=8192
    TEMPERATURE=1.0

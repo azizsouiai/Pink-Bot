@@ -8,13 +8,15 @@ A well-structured Python project for loading and interacting with LLM models. Su
 - ⚙️ **Flexible Configuration**: Environment-based configuration with sensible defaults
 - 🏗️ **Clean Architecture**: Modular design with interfaces and factory pattern
 - 💻 **CLI Interface**: Command-line interface with interactive mode
+- 🌐 **REST API**: FastAPI-based REST API for web integration
+- 💬 **Conversation History**: Maintains context across multiple messages
 - 🔧 **Quantization Support**: 4-bit and 8-bit quantization for memory efficiency
 - 📝 **Type Hints**: Full type annotations for better code quality
 
 ## Project Structure
 
 ```
-Chatbruti/
+Pink-Bot/                      # Or whatever folder name you cloned to
 ├── src/
 │   └── chatbruti/
 │       ├── __init__.py
@@ -28,22 +30,32 @@ Chatbruti/
 │           ├── huggingface_model.py
 │           ├── groq_model.py
 │           └── factory.py     # Model factory
+│       ├── api/
+│       │   ├── __init__.py
+│       │   └── server.py      # FastAPI server
+│       ├── utils/
+│       │   ├── __init__.py
+│       │   ├── system_prompt.py
+│       │   └── conversation.py # Conversation history manager
+│       └── api_server.py      # API server entry point
 ├── requirements.txt
 ├── .env.example
 ├── .gitignore
-└── README.md
+├── README.md
+└── API_DOCS.md                # API documentation
 ```
 
 ## Installation
 
-1. **Clone or navigate to the project directory:**
+1. **Clone the repository:**
    ```bash
-   cd Chatbruti
+   git clone https://github.com/azizsouiai/Pink-Bot.git
+   cd Pink-Bot  # Or whatever folder name you used
    ```
 
 2. **Create a virtual environment:**
    ```bash
-   python -m venv venv
+   python3 -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
    ```
 
@@ -52,10 +64,16 @@ Chatbruti/
    pip install -r requirements.txt
    ```
 
-4. **Set up environment variables:**
+4. **Install the package in editable mode:**
+   ```bash
+   pip install -e .
+   ```
+   This step is required so Python can find the `chatbruti` module.
+
+5. **Set up environment variables:**
    ```bash
    cp .env.example .env
-   # Edit .env with your configuration
+   # Edit .env with your configuration (add your GROQ_API_KEY)
    ```
 
 ## Configuration
@@ -147,6 +165,42 @@ python -m chatbruti.main --backend groq --prompt "Hello!"
 python -m chatbruti.main --backend huggingface --prompt "Hello!"
 ```
 
+### REST API Server
+
+Start the API server:
+```bash
+python -m chatbruti.api_server
+```
+
+The server will start on `http://localhost:8000`
+
+**API Documentation:**
+- Interactive docs: http://localhost:8000/docs
+- ReDoc: http://localhost:8000/redoc
+
+**Example API call:**
+```bash
+curl -X POST "http://localhost:8000/chat" \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Hello!", "session_id": "my-session"}'
+```
+
+**JavaScript/Fetch example:**
+```javascript
+const response = await fetch('http://localhost:8000/chat', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    message: 'Hello!',
+    session_id: 'my-session'
+  })
+});
+const data = await response.json();
+console.log(data.response);
+```
+
+For complete API documentation, see [API_DOCS.md](API_DOCS.md).
+
 ### Python API
 
 ```python
@@ -208,6 +262,15 @@ For local models (e.g., Mistral 7B):
 
 ## Troubleshooting
 
+### ModuleNotFoundError: No module named 'chatbruti'
+
+**Solution:** You need to install the package in editable mode:
+```bash
+pip install -e .
+```
+
+This is required after cloning the repository so Python can find the `chatbruti` module.
+
 ### Out of Memory Errors
 
 - Enable quantization: `LOAD_IN_4BIT=true` or `LOAD_IN_8BIT=true`
@@ -225,6 +288,27 @@ For local models (e.g., Mistral 7B):
 - For Groq: Ensure `GROQ_API_KEY` is set in `.env`
 - Verify the API key is valid
 - Check your Groq API account status
+
+### Installation Issues
+
+If you encounter errors during installation:
+
+1. **Make sure you're in the project directory:**
+   ```bash
+   # After cloning, navigate to the folder
+   cd Pink-Bot  # Or whatever the folder is named
+   ```
+
+2. **Use Python 3.8 or higher:**
+   ```bash
+   python3 --version  # Should be 3.8+
+   ```
+
+3. **Install in the correct order:**
+   ```bash
+   pip install -r requirements.txt
+   pip install -e .  # This step is crucial!
+   ```
 
 ## Development
 
