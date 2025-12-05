@@ -38,7 +38,7 @@ ENV/
 
 # Model cache (Hugging Face)
 .cache/
-models/
+
 
 # Logs
 *.log

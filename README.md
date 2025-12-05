@@ -1,6 +1,6 @@
-# Chatbruti
+# Pink-Bot (Chatbruti)
 
-A well-structured Python project for loading and interacting with LLM models. Supports local inference via Hugging Face and cloud inference via Groq API. Default configuration uses Groq with GPT OSS 120B model.
+A complete chatbot solution with Python backend (Chatbruti) and React widget frontend. The backend supports multiple LLM backends (Groq API, Hugging Face) and provides a REST API. The React widget can be integrated into any website.
 
 ## Features
 
@@ -10,6 +10,7 @@ A well-structured Python project for loading and interacting with LLM models. Su
 - 💻 **CLI Interface**: Command-line interface with interactive mode
 - 🌐 **REST API**: FastAPI-based REST API for web integration
 - 💬 **Conversation History**: Maintains context across multiple messages
+- 🎨 **React Widget**: Beautiful, embeddable chat widget for websites
 - 🔧 **Quantization Support**: 4-bit and 8-bit quantization for memory efficiency
 - 📝 **Type Hints**: Full type annotations for better code quality
 
@@ -18,27 +19,33 @@ A well-structured Python project for loading and interacting with LLM models. Su
 ```
 Pink-Bot/                      # Or whatever folder name you cloned to
 ├── src/
-│   └── chatbruti/
+│   └── chatbruti/             # Python backend
 │       ├── __init__.py
-│       ├── main.py              # CLI entry point
+│       ├── main.py            # CLI entry point
+│       ├── api_server.py      # API server entry point
 │       ├── config/
 │       │   ├── __init__.py
-│       │   └── settings.py     # Configuration management
-│       └── models/
-│           ├── __init__.py
-│           ├── base.py         # Base interface
-│           ├── huggingface_model.py
-│           ├── groq_model.py
-│           └── factory.py     # Model factory
+│       │   └── settings.py    # Configuration management
+│       ├── models/
+│       │   ├── __init__.py
+│       │   ├── base.py        # Base interface
+│       │   ├── huggingface_model.py
+│       │   ├── groq_model.py
+│       │   └── factory.py     # Model factory
 │       ├── api/
 │       │   ├── __init__.py
 │       │   └── server.py      # FastAPI server
-│       ├── utils/
-│       │   ├── __init__.py
-│       │   ├── system_prompt.py
-│       │   └── conversation.py # Conversation history manager
-│       └── api_server.py      # API server entry point
-├── requirements.txt
+│       └── utils/
+│           ├── __init__.py
+│           ├── system_prompt.py
+│           └── conversation.py # Conversation history manager
+├── widget-UI/                 # React widget (optional)
+│   ├── src/
+│   │   └── components/
+│   │       └── Chatbot/      # Chat widget components
+│   ├── package.json
+│   └── vite.config.ts
+├── requirements.txt           # Python dependencies
 ├── .env.example
 ├── .gitignore
 ├── README.md
@@ -46,6 +53,12 @@ Pink-Bot/                      # Or whatever folder name you cloned to
 ```
 
 ## Installation
+
+This project consists of two parts:
+1. **Python Backend (Chatbruti)** - The LLM API server
+2. **React Widget** - The web chat interface (optional, for web integration)
+
+### Part 1: Python Backend Setup
 
 1. **Clone the repository:**
    ```bash
@@ -68,13 +81,69 @@ Pink-Bot/                      # Or whatever folder name you cloned to
    ```bash
    pip install -e .
    ```
-   This step is required so Python can find the `chatbruti` module.
+   ⚠️ **Important:** This step is required so Python can find the `chatbruti` module.
 
 5. **Set up environment variables:**
    ```bash
    cp .env.example .env
    # Edit .env with your configuration (add your GROQ_API_KEY)
    ```
+
+6. **Start the API server:**
+   ```bash
+   python -m chatbruti.api_server
+   ```
+   The API will be available at `http://localhost:8000`
+
+### Part 2: React Widget Setup (Optional - for web integration)
+
+The React widget allows you to embed the chatbot into any website.
+
+1. **Navigate to the widget directory:**
+   ```bash
+   cd widget-UI  # If widget is in the same repo
+   # OR
+   cd /path/to/widget-UI  # If widget is in a separate location
+   ```
+
+2. **Install Node.js dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Configure API URL:**
+   Create a `.env` file in the widget-UI directory:
+   ```bash
+   echo "VITE_API_URL=http://localhost:8000/chat" > .env
+   ```
+   
+   Or edit `.env` manually:
+   ```env
+   VITE_API_URL=http://localhost:8000/chat
+   ```
+
+4. **Start the development server:**
+   ```bash
+   npm run dev
+   ```
+   The widget will be available at `http://localhost:5173` (or the port Vite assigns)
+
+### Quick Start (Both Services)
+
+**Terminal 1 - Start Python API:**
+```bash
+cd Pink-Bot
+source venv/bin/activate  # If not already activated
+python -m chatbruti.api_server
+```
+
+**Terminal 2 - Start React Widget:**
+```bash
+cd widget-UI
+npm run dev
+```
+
+Then open your browser to see the widget in action!
 
 ## Configuration
 
@@ -133,6 +202,29 @@ SYSTEM_PROMPT_FILE=system_prompt.txt
 ```
 
 ## Usage
+
+### Running the Complete System
+
+**For web integration (Python API + React Widget):**
+
+1. **Start the Python API server** (Terminal 1):
+   ```bash
+   cd Pink-Bot
+   source venv/bin/activate
+   python -m chatbruti.api_server
+   ```
+   API will run on: `http://localhost:8000`
+
+2. **Start the React widget** (Terminal 2):
+   ```bash
+   cd widget-UI
+   npm run dev
+   ```
+   Widget will run on: `http://localhost:5173`
+
+3. **Open your browser** and navigate to the widget URL to interact with the chatbot.
+
+**The widget automatically connects to the API and maintains conversation history.**
 
 ### Command Line Interface
 
@@ -201,6 +293,41 @@ console.log(data.response);
 
 For complete API documentation, see [API_DOCS.md](API_DOCS.md).
 
+### React Widget
+
+The React widget is a standalone component that can be integrated into any website.
+
+**Prerequisites:**
+- Python API server must be running on `http://localhost:8000`
+- Node.js and npm installed
+
+**Setup:**
+```bash
+cd widget-UI
+npm install
+```
+
+**Configure API URL:**
+Create `.env` file:
+```env
+VITE_API_URL=http://localhost:8000/chat
+```
+
+**Run development server:**
+```bash
+npm run dev
+```
+
+**Build for production:**
+```bash
+npm run build
+```
+
+The built files will be in the `dist/` directory and can be deployed to any static hosting service.
+
+**Integration:**
+The widget can be integrated into any website by including the built JavaScript bundle. See the widget's README for integration instructions.
+
 ### Python API
 
 ```python
@@ -229,6 +356,30 @@ response = model.generate(
     stream=True  # Enable streaming
 )
 print(response)
+```
+
+## System Architecture
+
+```
+┌─────────────────┐
+│  React Widget   │  (Frontend - User Interface)
+│  (widget-UI)    │
+└────────┬────────┘
+         │ HTTP Requests
+         │ (POST /chat)
+         ▼
+┌─────────────────┐
+│  Python API     │  (Backend - Chatbruti)
+│  FastAPI Server │
+│  Port: 8000     │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  LLM Backend    │  (Groq API or Hugging Face)
+│  - Groq API     │
+│  - Hugging Face │
+└─────────────────┘
 ```
 
 ## Backends
@@ -291,6 +442,8 @@ This is required after cloning the repository so Python can find the `chatbruti`
 
 ### Installation Issues
 
+**Python Backend:**
+
 If you encounter errors during installation:
 
 1. **Make sure you're in the project directory:**
@@ -309,6 +462,24 @@ If you encounter errors during installation:
    pip install -r requirements.txt
    pip install -e .  # This step is crucial!
    ```
+
+**React Widget:**
+
+1. **Make sure Node.js is installed:**
+   ```bash
+   node --version  # Should be 16+
+   npm --version
+   ```
+
+2. **If API connection fails:**
+   - Verify the Python API server is running
+   - Check `.env` file has correct `VITE_API_URL`
+   - Check browser console for CORS errors
+   - Ensure API is accessible at the configured URL
+
+3. **Port conflicts:**
+   - If port 5173 is in use, Vite will automatically use the next available port
+   - Check the terminal output for the actual port number
 
 ## Development
 
